@@ -1,3 +1,4 @@
+import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -14,9 +15,17 @@ interface SignUpCardProps {
 }
 
 export default function SignUpCard({ setState }: SignUpCardProps) {
+    const { signIn } = useAuthActions();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [pending, setPending] = useState(false);
+
+    async function handleProviderSignIn(provider: 'github' | 'google') {
+        setPending(true);
+        await signIn(provider);
+        setPending(false);
+    }
 
     return (
         <Card className="w-full h-full p-6">
@@ -28,18 +37,18 @@ export default function SignUpCard({ setState }: SignUpCardProps) {
             </CardHeader>
             <CardContent className="space-y-5 px-0 pb-0">
                 <form className="space-y-2.5">
-                    <Input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <Input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <Input type="password" placeholder="Confirm password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                    <Button type="submit" className="w-full">Sign up</Button>
+                    <Input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={pending} />
+                    <Input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={pending} />
+                    <Input type="password" placeholder="Confirm password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={pending} />
+                    <Button type="submit" className="w-full" disabled={pending}>Sign up</Button>
                 </form>
                 <Separator />
                 <div className="flex flex-col gap-y-2.5">
-                    <Button variant="outline" size="lg" className="w-full relative">
+                    <Button variant="outline" size="lg" className="w-full relative" onClick={() => handleProviderSignIn('google')} disabled={pending}>
                         <FcGoogle className="size-5 absolute left-2.5 top-1/2 -translate-y-1/2" />
                         Sign in with Google
                     </Button>
-                    <Button variant="outline" size="lg" className="w-full relative">
+                    <Button variant="outline" size="lg" className="w-full relative" onClick={() => handleProviderSignIn('github')} disabled={pending}>
                         <FaGithub className="size-5 absolute left-2.5 top-1/2 -translate-y-1/2" />
                         Sign in with GitHub
                     </Button>
