@@ -1,4 +1,5 @@
 import { useAuthActions } from "@convex-dev/auth/react";
+import { TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -18,7 +19,19 @@ export default function SignInCard({ setState }: SignInCardProps) {
     const { signIn } = useAuthActions();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
     const [pending, setPending] = useState(false);
+
+    function onPasswordSignIn(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setPending(true);
+        signIn('password', { email, password, flow: "signIn" }).catch(() => {
+            console.log("error");
+            setError("Invalid email or password");
+        }).finally(() => {
+            setPending(false);
+        });
+    }
 
     async function handleProviderSignIn(provider: 'github' | 'google') {
         setPending(true);
@@ -34,8 +47,12 @@ export default function SignInCard({ setState }: SignInCardProps) {
                     Use your email and password to sign in.
                 </CardDescription>
             </CardHeader>
+            {!!error && <div className="text-sm text-center rounded-md bg-destructive/15 text-destructive p-3 flex items-center gap-x-2 mb-2.5">
+                <TriangleAlert className="size-4" />
+                <p>{error}</p>
+            </div>}
             <CardContent className="space-y-5 px-0 pb-0">
-                <form className="space-y-2.5">
+                <form className="space-y-2.5" onSubmit={onPasswordSignIn}>
                     <Input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={pending} />
                     <Input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={pending} />
                     <Button type="submit" className="w-full" disabled={pending}>Sign in</Button>
