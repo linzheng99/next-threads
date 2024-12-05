@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ConvexClientProvider } from "@/components/convex-client-provider";
+import Modals from "@/components/modals";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +27,8 @@ export default function RootLayout({
           className={`${inter.className} antialiased h-full`}
         >
           <ConvexClientProvider>
+            <Toaster />
+            <Modals />
             {children}
           </ConvexClientProvider>
         </body>
