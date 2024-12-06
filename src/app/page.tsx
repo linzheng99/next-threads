@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
+import PageLoader from "@/components/page-loader";
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 
@@ -23,4 +24,6 @@ export default function Home() {
       setOpen(true)
     }
   }, [workspaceId, isLoading, open, setOpen])
+
+  if (isLoading) return <PageLoader />
 }
