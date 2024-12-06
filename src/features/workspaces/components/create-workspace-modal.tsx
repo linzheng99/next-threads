@@ -22,6 +22,7 @@ export default function CreateWorkspaceModal() {
 
   function handleClose() {
     setOpen(false)
+    setName('')
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

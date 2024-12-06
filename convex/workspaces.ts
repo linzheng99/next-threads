@@ -1,12 +1,36 @@
 import { getAuthUserId } from '@convex-dev/auth/server';
 import { v } from "convex/values";
 
+import { generateCode } from '../src/lib/utils';
 import { mutation, query } from "./_generated/server";
 
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("workspaces").collect()
+    const userId = await getAuthUserId(ctx)
+
+    if (!userId) {
+      return []
+    }
+
+    // 获取用户所在的所有 workspace
+    const members = await ctx.db
+      .query('members')
+      .withIndex('by_user_id', (q) => q.eq('userId', userId))
+      .collect()
+
+    const workspaceIds = members.map((member) => member.workspaceId)
+    const workspaces = []
+
+    for (const workspaceId of workspaceIds) {
+      const workspace = await ctx.db.get(workspaceId)
+
+      if (workspace) {
+        workspaces.push(workspace)
+      }
+    }
+
+    return workspaces
   }
 })
 
@@ -19,6 +43,16 @@ export const getById = query({
 
     if (!userId) {
       throw new Error("Unauthorized")
+    }
+
+    // 检测用户是否在 workspace 中
+    const member = await ctx.db
+      .query('members')
+      .withIndex('by_workspace_id_user_id', (q) => q.eq('workspaceId', args.id).eq('userId', userId))
+      .unique()
+
+    if (!member) {
+      return null
     }
 
     return await ctx.db.get(args.id)
@@ -36,12 +70,18 @@ export const create = mutation({
       throw new Error("Unauthorized")
     }
 
-    const joinCode = '123456'
+    const joinCode = generateCode()
 
     const workspaceId = await ctx.db.insert("workspaces", {
       name: args.name,
       userId,
       joinCode,
+    })
+
+    await ctx.db.insert("members", {
+      userId,
+      workspaceId,
+      role: "admin",
     })
 
     return workspaceId
