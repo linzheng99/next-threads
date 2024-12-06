@@ -1,17 +1,13 @@
 'use client'
 
-import { useAuthActions } from "@convex-dev/auth/react"
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
-import { Button } from "@/components/ui/button"
-import UserButton from "@/features/auth/components/user-button";
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 
 export default function Home() {
   const router = useRouter()
-  const { signOut } = useAuthActions();
   const { data, isLoading } = useGetWorkspaces()
   const [open, setOpen] = useCreateWorkspaceModal()
   // 缓存依赖 类似 Vue 里面的计算属性, 当依赖的值发生变化时, 缓存值会重新计算, 避免不必要的重复渲染, 也避免了下面的 useEffect 的重复执行
@@ -27,11 +23,4 @@ export default function Home() {
       setOpen(true)
     }
   }, [workspaceId, isLoading, open, setOpen])
-
-  return (
-    <div>
-      <Button onClick={() => signOut()}>Sign out</Button>
-      <UserButton />
-    </div>
-  )
 }
