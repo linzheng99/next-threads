@@ -2,6 +2,7 @@ import { HashIcon, MessageSquareText, SendHorizonal } from "lucide-react";
 
 import { useGetChannels } from "@/features/channels/api/use-get-channels";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
+import { useGetMembers } from "@/features/members/api/use-get-member";
 import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 import WorkspaceSection from "@/features/workspaces/components/workspace-section";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
@@ -9,6 +10,7 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import PageError from "./page-error";
 import PageLoader from "./page-loader";
 import SidebarItem from "./sidebar-item";
+import UserItem from "./user-item";
 import WorkspaceHeader from "./workspace-header";
 
 const WorkspaceSidebar = () => {
@@ -23,8 +25,12 @@ const WorkspaceSidebar = () => {
   const { data: channels, isLoading: isChannelsLoading } = useGetChannels({
     workspaceId,
   })
+  const { data: members, isLoading: isMembersLoading } = useGetMembers({
+    workspaceId,
+  })
+  console.log(members)
 
-  if (isMemberLoading || isWorkspaceLoading || isChannelsLoading) {
+  if (isMemberLoading || isWorkspaceLoading || isChannelsLoading || isMembersLoading) {
     return <PageLoader className="bg-[#5e2c5f]" />
   }
 
@@ -39,9 +45,14 @@ const WorkspaceSidebar = () => {
         <SidebarItem id="threads" label="Threads" icon={MessageSquareText} />
         <SidebarItem id="drafts" label="Drafts & Sent" icon={SendHorizonal} />
       </div>
-      <WorkspaceSection label="Channels" hint="Manage your channels" onNew={() => {}}>
+      <WorkspaceSection label="Channels" hint="New channel" onNew={() => {}}>
         {channels?.map((channel) => (
           <SidebarItem key={channel._id} id={channel._id} label={channel.name} icon={HashIcon} />
+        ))}
+      </WorkspaceSection>
+      <WorkspaceSection label="Direct Messages" hint="New Direct Message" onNew={() => {}}>
+        {members?.map((member) => (
+          <UserItem key={member._id} id={member._id} label={member.user.name} image={member.user.image} />
         ))}
       </WorkspaceSection>
     </div>
