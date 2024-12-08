@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { type Doc } from "@/convex/_generated/dataModel";
+import InviteModal from "@/features/workspaces/components/invite-modal";
 
 import Hint from "./hint";
 import { Button } from "./ui/button";
@@ -21,9 +22,16 @@ interface WorkspaceHeaderProps {
 
 const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
   const [preferencesOpen, setPreferencesOpen] = useState(false)
+  const [inviteModalOpen, setInviteModalOpen] = useState(false)
 
   return (
     <>
+      <InviteModal
+        name={workspace.name}
+        joinCode={workspace.joinCode}
+        open={inviteModalOpen}
+        onOpenChange={setInviteModalOpen}
+      />
       <PreferencesModal isOpen={preferencesOpen} onClose={() => setPreferencesOpen(false)} initialValue={workspace.name} />
       <div className="flex items-center justify-between px-4 h-[49px] gap-0.5">
         <DropdownMenu>
@@ -53,7 +61,7 @@ const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
               isAdmin && (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setInviteModalOpen(true)}>
                     <p className="truncate cursor-pointer py-2">
                       Invite people to {workspace.name}
                     </p>
