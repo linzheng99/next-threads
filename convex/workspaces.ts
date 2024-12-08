@@ -59,6 +59,35 @@ export const getById = query({
   }
 })
 
+export const getInfoById = query({
+  args: {
+    id: v.id("workspaces"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+
+    if (!userId) {
+      throw new Error("Unauthorized")
+    }
+
+    const member = await ctx.db
+      .query('members')
+      .withIndex('by_workspace_id_user_id', (q) => q.eq('workspaceId', args.id).eq('userId', userId))
+      .unique()
+
+    const workspace = await ctx.db.get(args.id)
+
+    if (!workspace) {
+      throw new Error("Workspace not found")
+    }
+
+    return {
+      name: workspace.name,
+      isMember: !!member,
+    }
+  }
+})
+
 export const create = mutation({
   args: {
     name: v.string(),
@@ -180,6 +209,47 @@ export const updateJoinCode = mutation({
     const joinCode = generateCode()
 
     await ctx.db.patch(args.workspaceId, { joinCode })
+
+    return args.workspaceId
+  }
+})
+
+export const join = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    joinCode: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+
+    if (!userId) {
+      throw new Error("Unauthorized")
+    }
+
+    const existingMember = await ctx.db
+      .query('members')
+      .withIndex('by_workspace_id_user_id', (q) => q.eq('workspaceId', args.workspaceId).eq('userId', userId))
+      .unique()
+
+    if (existingMember) {
+      throw new Error("Already a member of this workspace")
+    }
+
+    const workspace = await ctx.db.get(args.workspaceId)
+
+    if (!workspace) {
+      throw new Error("Workspace not found")
+    }
+
+    if (workspace.joinCode !== args.joinCode) {
+      throw new Error("Invalid join code")
+    }
+
+    await ctx.db.insert("members", {
+      userId,
+      workspaceId: args.workspaceId,
+      role: "member",
+    })
 
     return args.workspaceId
   }
