@@ -1,6 +1,7 @@
 import { HashIcon, MessageSquareText, SendHorizonal } from "lucide-react";
 
 import { useGetChannels } from "@/features/channels/api/use-get-channels";
+import { useChannelId } from "@/features/channels/hooks/use-channel-id";
 import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useGetMembers } from "@/features/members/api/use-get-member";
@@ -16,6 +17,7 @@ import WorkspaceHeader from "./workspace-header";
 
 const WorkspaceSidebar = () => {
   const workspaceId = useWorkspaceId()
+  const channelId = useChannelId()
   const [, setCreateChannelOpen] = useCreateChannelModal()
 
   const { data: member, isLoading: isMemberLoading } = useCurrentMember({
@@ -52,7 +54,13 @@ const WorkspaceSidebar = () => {
         onNew={member.role === 'admin' ? () => setCreateChannelOpen(true) : undefined}
       >
         {channels?.map((channel) => (
-          <SidebarItem key={channel._id} id={channel._id} label={channel.name} icon={HashIcon} />
+          <SidebarItem
+            key={channel._id}
+            id={channel._id}
+            label={channel.name}
+            icon={HashIcon}
+            variant={channelId === channel._id ? 'active' : 'default'}
+          />
         ))}
       </WorkspaceSection>
       <WorkspaceSection label="Direct Messages" hint="New Direct Message" onNew={() => {}}>
