@@ -37,7 +37,7 @@ export default function WorkspacePage() {
       setCreateChannelOpen(true)
     }
 
-  }, [workspace, channels, channelId, isAdmin, channelOpen, setCreateChannelOpen, router, isChannelsLoading, isWorkspaceLoading, isMemberLoading, member])
+  }, [workspace, channels, channelId, isAdmin, channelOpen, setCreateChannelOpen, router, isChannelsLoading, isWorkspaceLoading, isMemberLoading, member, workspaceId])
 
   if (isMemberLoading || isWorkspaceLoading || isChannelsLoading) {
     return <PageLoader />

@@ -1,13 +1,15 @@
 "use client"
 
+import { useMemo } from "react"
+
 import PageError from "@/components/page-error"
 import PageLoader from "@/components/page-loader"
 import { useGetChannel } from "@/features/channels/api/use-get-channel"
+import ChannelInput from "@/features/channels/components/channel-input"
 import ChannelHeader from "@/features/channels/components/header"
 import { useChannelId } from "@/features/channels/hooks/use-channel-id"
 import { useCurrentMember } from "@/features/members/api/use-current-member"
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
-import { useMemo } from "react"
 
 const ChannelIdPage = () => {
   const channelId = useChannelId()
@@ -26,8 +28,10 @@ const ChannelIdPage = () => {
   }
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <ChannelHeader name={channel.name} id={channel._id} workspaceId={workspaceId} isAdmin={isAdmin} />
+      <div className="flex-1"></div>
+      <ChannelInput placeholder={`Message # ${channel.name}`} />
     </div>
   )
 }

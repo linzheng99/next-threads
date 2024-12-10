@@ -1,6 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { ChevronDown, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,14 +13,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useUpdateChannel } from "../api/use-update-channel";
-import { useRemoveChannel } from "../api/use-remove-channel";
-import { Id } from "@/convex/_generated/dataModel";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { type Id } from "@/convex/_generated/dataModel";
 import { useConfirm } from "@/hooks/use-confirm";
+
+import { useRemoveChannel } from "../api/use-remove-channel";
+import { useUpdateChannel } from "../api/use-update-channel";
 
 interface ChannelHeaderProps {
   name: string
@@ -45,9 +46,9 @@ const ChannelHeader = ({ name, id, workspaceId, isAdmin }: ChannelHeaderProps) =
     setChannelName(name)
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    updateChannel({ id, name: channelName, workspaceId }, {
+    await updateChannel({ id, name: channelName, workspaceId }, {
       onSuccess: () => {
         toast.success("Channel name updated")
         setIsEditing(false)
@@ -62,7 +63,7 @@ const ChannelHeader = ({ name, id, workspaceId, isAdmin }: ChannelHeaderProps) =
     const ok = await confirmDialog()
     if (!ok) return
 
-    removeChannel({ id }, {
+    await removeChannel({ id }, {
       onSuccess: () => {
         toast.success("Channel deleted")
         router.push(`/workspace/${workspaceId}`)
