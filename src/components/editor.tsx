@@ -2,7 +2,8 @@
 
 import 'quill/dist/quill.snow.css'
 
-import { ImageIcon, Smile } from 'lucide-react'
+import { ImageIcon, Smile, XIcon } from 'lucide-react'
+import Image from 'next/image'
 import Quill, { type Delta, type Op, type QuillOptions } from 'quill'
 import { type MutableRefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { MdSend } from 'react-icons/md'
@@ -39,6 +40,7 @@ const Editor = ({
   innerRef
 }: EditorProps) => {
   const [text, setText] = useState('')
+  const [image, setImage] = useState<File | null>(null)
   const [isToolbarVisible, setIsToolbarVisible] = useState(true)
 
   // Quill 容器
@@ -53,6 +55,7 @@ const Editor = ({
   const defaultValueRef = useRef(defaultValue)
   // 保持获取传入的最新 disabled
   const disabledRef = useRef(disabled)
+  const imageElementRef = useRef<HTMLInputElement>(null)
 
   // 同步更新所有 ref 的值
   // 使用 useLayoutEffect 确保在 DOM 更新前同步执行
@@ -157,10 +160,52 @@ const Editor = ({
     }
   }
 
+  function removeImage() {
+    setImage(null)
+    imageElementRef.current!.value = ''
+  }
+
+  function handleImageSelect(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (file) {
+      setImage(file)
+    }
+  }
+
   return (
     <div className="flex flex-col">
+      <input
+        type="file"
+        accept="image/*"
+        ref={imageElementRef}
+        onChange={handleImageSelect}
+        className="hidden"
+      />
+
       <div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
         <div ref={containerRef} className='h-full min-h-[120px] ql-custom'></div>
+        {
+          !!image && (
+            <div className='p-2'>
+              <div className='flex items-center justify-center rounded-md relative group/image size-[64px]'>
+                <Image
+                  src={URL.createObjectURL(image)}
+                  alt="image"
+                  fill
+                  className='object-cover rounded-md'
+                />
+                <Hint label='Remove image'>
+                  <button
+                    onClick={removeImage}
+                  className="absolute -top-1.5 -right-1.5 rounded-full bg-black/70 group-hover/image:flex hover:bg-black text-white items-center justify-center"
+                >
+                    <XIcon className="size-3.5" />
+                  </button>
+                </Hint>
+              </div>
+            </div>
+          )
+        }
         <div className='flex px-2 pb-2 z-[5]'>
           <Hint label={isToolbarVisible ? 'Hide formatting' : 'Show formatting'}>
             <Button disabled={disabled} size="iconSm" variant="ghost" onClick={toggleToolbar}>
@@ -174,7 +219,7 @@ const Editor = ({
           </EmojiPopover>
           {variant === 'create' && (
             <Hint label='Image'>
-              <Button disabled={disabled} size="iconSm" variant="ghost" onClick={() => { }}>
+              <Button disabled={disabled} size="iconSm" variant="ghost" onClick={() => imageElementRef.current?.click()}>
                 <ImageIcon className='size-4' />
               </Button>
             </Hint>
