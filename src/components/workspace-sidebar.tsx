@@ -1,13 +1,13 @@
 import { HashIcon, MessageSquareText, SendHorizonal } from "lucide-react";
 
 import { useGetChannels } from "@/features/channels/api/use-get-channels";
-import { useChannelId } from "@/features/channels/hooks/use-channel-id";
 import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useGetMembers } from "@/features/members/api/use-get-member";
 import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 import WorkspaceSection from "@/features/workspaces/components/workspace-section";
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { useChannelId } from "@/hooks/use-channel-id";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import PageError from "./page-error";
 import PageLoader from "./page-loader";

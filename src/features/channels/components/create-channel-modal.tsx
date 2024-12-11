@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
+import { useWorkspaceId } from "@/hooks/use-workspace-id"
 
 import { useCreateChannel } from "../api/use-create-channel"
 import { useCreateChannelModal } from "../store/use-create-channel-modal"

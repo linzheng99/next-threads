@@ -7,9 +7,9 @@ import PageLoader from "@/components/page-loader"
 import { useGetChannel } from "@/features/channels/api/use-get-channel"
 import ChannelInput from "@/features/channels/components/channel-input"
 import ChannelHeader from "@/features/channels/components/header"
-import { useChannelId } from "@/features/channels/hooks/use-channel-id"
 import { useCurrentMember } from "@/features/members/api/use-current-member"
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
+import { useChannelId } from "@/hooks/use-channel-id"
+import { useWorkspaceId } from "@/hooks/use-workspace-id"
 
 const ChannelIdPage = () => {
   const channelId = useChannelId()

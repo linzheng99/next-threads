@@ -12,9 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import { useWorkspaceId } from "../../../hooks/use-workspace-id";
 import { useGetWorkspace } from "../api/use-get-workspace";
 import { useGetWorkspaces } from "../api/use-get-workspaces";
-import { useWorkspaceId } from "../hooks/use-workspace-id";
 import { useCreateWorkspaceModal } from "../store/use-create-workspace-modal";
 
 

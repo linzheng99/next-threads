@@ -3,7 +3,7 @@ import {type LucideIcon } from 'lucide-react';
 import Link from "next/link";
 import { type IconType } from "react-icons/lib";
 
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
 
 import { Button } from "./ui/button";

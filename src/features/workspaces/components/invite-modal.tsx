@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useUpdateJoinCode } from "@/features/workspaces/api/use-update-join-code";
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 interface InviteModalProps {
   name: string

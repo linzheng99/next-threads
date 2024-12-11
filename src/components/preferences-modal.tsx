@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/dialog"
 import { useRemoveWorkspace } from "@/features/workspaces/api/use-remove-workspace"
 import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace"
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
 import { useConfirm } from "@/hooks/use-confirm"
+import { useWorkspaceId } from "@/hooks/use-workspace-id"
 
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"

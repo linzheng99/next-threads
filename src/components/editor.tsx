@@ -90,7 +90,15 @@ const Editor = ({
             enter: {
               key: 'Enter',
               handler: () => {
-                console.log('enter')
+                const text = quill.getText()
+                const addedImage = imageElementRef.current?.files?.[0] || null
+                const isEmpty = !addedImage && text.replace(/<(.|\n)*?>/g, '').trim().length === 0
+
+                if (isEmpty) return
+
+                const body = JSON.stringify(quill.getContents())
+
+                submitRef.current?.({ image: addedImage, body })
               },
             },
             shiftEnter: {
@@ -140,7 +148,7 @@ const Editor = ({
     }
   }, [innerRef])
 
-  const isEmpty = text.replace(/<(.|\n)*?>/g, '').trim() === ''
+  const isEmpty = !image && text.replace(/<(.|\n)*?>/g, '').trim().length === 0
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onEmojiSelect = (emoji: any) => {
@@ -182,7 +190,10 @@ const Editor = ({
         className="hidden"
       />
 
-      <div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
+      <div className={cn(
+        "flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white",
+        disabled && 'opacity-50'
+      )}>
         <div ref={containerRef} className='h-full min-h-[120px] ql-custom'></div>
         {
           !!image && (
@@ -197,8 +208,8 @@ const Editor = ({
                 <Hint label='Remove image'>
                   <button
                     onClick={removeImage}
-                  className="absolute -top-1.5 -right-1.5 rounded-full bg-black/70 group-hover/image:flex hover:bg-black text-white items-center justify-center"
-                >
+                    className="absolute -top-1.5 -right-1.5 rounded-full bg-black/70 group-hover/image:flex hover:bg-black text-white items-center justify-center"
+                  >
                     <XIcon className="size-3.5" />
                   </button>
                 </Hint>
@@ -230,7 +241,7 @@ const Editor = ({
                 disabled={disabled}
                 size="sm"
                 variant="outline"
-                onClick={() => { }}
+                onClick={onCancel}
               >
                 Cancel
               </Button>
@@ -239,7 +250,10 @@ const Editor = ({
                 size="sm"
                 variant="ghost"
                 className="ml-auto bg-[#007a5a] hover:bg-[#007a5a]/80 text-white hover:text-white"
-                onClick={() => { }}
+                onClick={() => onSubmit({
+                  image,
+                  body: JSON.stringify(quillRef.current?.getContents())
+                })}
               >
                 Save
               </Button>
@@ -256,7 +270,10 @@ const Editor = ({
                   ? 'bg-white hover:bg-white text-muted-foreground'
                   : 'bg-[#007a5a] hover:bg-[#007a5a]/80 text-white hover:text-white'
               )}
-              onClick={() => { }}
+              onClick={() => onSubmit({
+                image,
+                body: JSON.stringify(quillRef.current?.getContents())
+              })}
             >
               <MdSend className="size-4" />
             </Button>

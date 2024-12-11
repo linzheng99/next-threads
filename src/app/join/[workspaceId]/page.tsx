@@ -12,7 +12,7 @@ import PageLoader from "@/components/page-loader"
 import { Button } from "@/components/ui/button"
 import { useGetWorkspaceInfo } from "@/features/workspaces/api/use-info-workspace"
 import { useJoinWorkspace } from "@/features/workspaces/api/use-join-workspace"
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
+import { useWorkspaceId } from "@/hooks/use-workspace-id"
 import { cn } from "@/lib/utils"
 
 const JoinPage = () => {
