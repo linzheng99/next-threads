@@ -19,6 +19,8 @@ const ChannelIdPage = () => {
   const { data: member, isLoading: isMemberLoading } = useCurrentMember({ workspaceId })
   const isAdmin = useMemo(() => member?.role === 'admin', [member?.role])
 
+  console.log('channel-------->', channel, isChannelLoading)
+
   if (isChannelLoading || isMemberLoading) {
     return <PageLoader />
   }
@@ -26,6 +28,7 @@ const ChannelIdPage = () => {
   if (!channel || !member) {
     return <PageError message="Channel not found" />
   }
+
 
   return (
     <div className="h-full flex flex-col">
