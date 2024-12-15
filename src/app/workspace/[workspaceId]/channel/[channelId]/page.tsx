@@ -35,6 +35,7 @@ const ChannelIdPage = () => {
     <div className="h-full flex flex-col">
       <ChannelHeader name={channel.name} id={channel._id} workspaceId={workspaceId} isAdmin={isAdmin} />
       <MessageList
+        variant="channel"
         channelName={channel.name}
         channelCreationTime={channel._creationTime}
         data={results}
