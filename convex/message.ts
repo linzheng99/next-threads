@@ -95,6 +95,7 @@ export const get = query({
       _conversationId = parentMessage.conversationId
     }
 
+    // 按时间降序排序
     const results = await ctx.db.query("messages")
       .withIndex("by_channel_id_parent_message_id_conversation_id", (q) =>
         q

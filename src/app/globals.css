@@ -119,3 +119,8 @@ body {
   @apply truncate
 }
 
+.message-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #dcdcdc #fafafa;
+}
+
