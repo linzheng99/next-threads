@@ -105,7 +105,6 @@ const Message = ({
   }
 
   async function handleToggleReaction(value: string) {
-    console.log('handleToggleReaction', value)
     await toggleReaction({ messageId: id, value }, {
       onSuccess: () => {
         toast.success('Reaction toggled')
