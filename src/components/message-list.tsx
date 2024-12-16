@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { type Id } from "@/convex/_generated/dataModel";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
-import { type GetMessagesResultType } from "@/features/message/api/use-get-messages"
+import { type GetMessagesResultType } from "@/features/messages/api/use-get-messages"
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import ChannelHero from "./channel-hero";

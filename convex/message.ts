@@ -173,6 +173,79 @@ export const get = query({
   }
 })
 
+export const getById = query({
+  args: {
+    id: v.id("messages"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+
+    if (!userId) {
+      throw new Error("Unauthorized")
+    }
+
+    const message = await ctx.db.get(args.id)
+    if (!message) return null
+
+    const currentMember = await getMember(ctx, message.workspaceId, userId)
+    if (!currentMember) return null
+
+    const member = await populateMember(ctx, message.memberId)
+    const user = member ? await populateUser(ctx, member.userId) : null
+    if (!member || !user) {
+      return null
+    }
+
+    const reactions = await populateReactions(ctx, message._id)
+
+    // 转换数据结构，计算每个reaction的count
+    const reactionsWithCount = reactions.map((reaction) => ({
+      ...reaction,
+      count: reactions.filter((r) => r.value === reaction.value).length,
+    }))
+
+    // 去重，合并用户ID
+    const dedupedReactions = reactionsWithCount.reduce((acc, reaction) => {
+      const existingReaction = acc.find((r) => r.value === reaction.value)
+
+      // 如果已存在该表情，合并用户ID
+      // 如果是新表情，创建新记录
+      if (existingReaction) {
+        existingReaction.memberIds = Array.from(
+          new Set([...existingReaction.memberIds, reaction.memberId])
+        )
+      } else {
+        acc.push({
+          ...reaction,
+          memberIds: [reaction.memberId],
+        })
+      }
+
+      return acc
+    },
+      [] as (Doc<'reactions'> & {
+        count: number,
+        memberIds: Id<'members'>[],
+      })[]
+    )
+
+    // 移除memberId属性
+    const reactionsWithoutMemberIdProperty = dedupedReactions.map(
+      ({ memberId: _memberId, ...rest }) => rest
+    )
+
+    const image = message.image ? await ctx.storage.getUrl(message.image) : undefined
+
+    return {
+      ...message,
+      image,
+      user,
+      member,
+      reactions: reactionsWithoutMemberIdProperty,
+    }
+  }
+})
+
 export const create = mutation({
   args: {
     body: v.string(),

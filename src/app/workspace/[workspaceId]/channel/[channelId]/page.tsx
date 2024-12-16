@@ -9,7 +9,7 @@ import { useGetChannel } from "@/features/channels/api/use-get-channel"
 import ChannelInput from "@/features/channels/components/channel-input"
 import ChannelHeader from "@/features/channels/components/header"
 import { useCurrentMember } from "@/features/members/api/use-current-member"
-import { useGetMessages } from "@/features/message/api/use-get-messages"
+import { useGetMessages } from "@/features/messages/api/use-get-messages"
 import { useChannelId } from "@/hooks/use-channel-id"
 import { useWorkspaceId } from "@/hooks/use-workspace-id"
 

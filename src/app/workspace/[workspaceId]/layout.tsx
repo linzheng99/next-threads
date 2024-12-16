@@ -1,5 +1,7 @@
 "use client";
 
+
+import PageLoader from "@/components/page-loader";
 import Sidebar from "@/components/sidebar";
 import Toolbar from "@/components/toolbar";
 import {
@@ -8,12 +10,19 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import WorkspaceSidebar from "@/components/workspace-sidebar";
+import { type Id } from "@/convex/_generated/dataModel";
+import Thread from "@/features/messages/components/thread";
+import usePanel from "@/hooks/use-panel";
 
 interface WorkspaceLayoutProps {
   children: React.ReactNode
 }
 
 const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
+  const { parentMessageId, onClose } = usePanel()
+
+  const showPanel = !!parentMessageId
+
   return (
     <div className="h-full">
       <Toolbar />
@@ -27,6 +36,23 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
           <ResizablePanel minSize={20} defaultSize={80}>
             {children}
           </ResizablePanel>
+          {showPanel && (
+            <>
+              <ResizableHandle withHandle />
+              <ResizablePanel minSize={20} defaultSize={29}>
+                {
+                  parentMessageId ? (
+                    <Thread
+                      messageId={parentMessageId as Id<'messages'>}
+                      onClose={onClose}
+                    />
+                  ) : (
+                    <PageLoader />
+                  )
+                }
+              </ResizablePanel>
+            </>
+          )}
         </ResizablePanelGroup>
       </div>
     </div>

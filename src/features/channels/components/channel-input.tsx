@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { type Id } from '@/convex/_generated/dataModel';
-import { useCreateMessage } from '@/features/message/api/use-create-message';
+import { useCreateMessage } from '@/features/messages/api/use-create-message';
 import { useGenerateUploadUrl } from '@/features/upload/api/use-generate-upload-url';
 import { useChannelId } from '@/hooks/use-channel-id';
 import { useWorkspaceId } from '@/hooks/use-workspace-id';

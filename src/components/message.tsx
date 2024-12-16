@@ -1,14 +1,14 @@
-
 import { format, isToday, isYesterday } from "date-fns";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
 
 import { type Doc, type Id } from "@/convex/_generated/dataModel";
-import { useRemoveMessage } from "@/features/message/api/use-remove-message";
-import { useUpdateMessage } from "@/features/message/api/use-update-message";
+import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
+import { useUpdateMessage } from "@/features/messages/api/use-update-message";
 import { useToggleReaction } from "@/features/reactions/api/use-toggle-reactions";
 import Reactions from "@/features/reactions/components/reactions";
 import { useConfirm } from "@/hooks/use-confirm";
+import usePanel from "@/hooks/use-panel";
 import { cn } from "@/lib/utils";
 
 import Hint from "./hint";
@@ -68,6 +68,8 @@ const Message = ({
   threadImage,
   threadTimestamp,
 }: MessageProps) => {
+  const { parentMessageId, setParentMessageId, onClose: onClosePanel } = usePanel()
+
   const [ConfirmDialog, confirm] = useConfirm(
     'Are you sure you want to delete this message?',
     'This action cannot be undone.'
@@ -95,8 +97,11 @@ const Message = ({
     if (!ok) return
 
     await removeMessage({ id }, {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success('Message deleted')
+        if (parentMessageId === id) {
+          await onClosePanel()
+        }
       },
       onError: () => {
         toast.error('Failed to delete message')
@@ -157,7 +162,7 @@ const Message = ({
                 isAuthor={isAuthor}
                 isPending={isPending}
                 handleEdit={() => setIdEditing(id)}
-                handleThread={() => { }}
+                handleThread={() => setParentMessageId(id)}
                 handleDelete={handleRemoveMessage}
                 handleReaction={handleToggleReaction}
                 hideTreadButton={hideTreadButton}
@@ -217,7 +222,7 @@ const Message = ({
               isAuthor={isAuthor}
               isPending={isPending}
               handleEdit={() => setIdEditing(id)}
-              handleThread={() => { }}
+              handleThread={() => setParentMessageId(id)}
               handleDelete={handleRemoveMessage}
               handleReaction={handleToggleReaction}
               hideTreadButton={hideTreadButton}
