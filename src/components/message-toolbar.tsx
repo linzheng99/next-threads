@@ -23,10 +23,15 @@ const MessageToolbar = ({
   handleReaction,
   hideTreadButton,
 }: MessageToolbarProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleEmojiSelect(emoji: any) {
+    handleReaction(emoji.native)
+  }
+
   return (
     <div className="absolute top-0 right-5">
       <div className="group-hover:opacity-100 opacity-0 transition-opacity border bg-white rounded-md">
-        <EmojiPopover hint="Add a reaction" align="end" onEmojiSelect={(emoji) => handleReaction(emoji)}>
+        <EmojiPopover hint="Add a reaction" align="end" onEmojiSelect={handleEmojiSelect}>
           <Button variant="ghost" size="iconSm" disabled={isPending}>
             <Smile className="size-4" />
           </Button>
