@@ -22,7 +22,7 @@ const Thumbnail = ({ url }: ThumbnailProps) => {
       <VisuallyHidden>
         <DialogTitle className="p-3">image</DialogTitle>
       </VisuallyHidden>
-      <DialogTrigger>
+      <DialogTrigger className="max-w-[360px]">
         <div className="relative overflow-hidden rounded-lg max-w-[360px] border my-2 cursor-zoom-in">
           <img src={url} alt="message image" className="rounded-md size-full object-cover" />
         </div>

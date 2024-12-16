@@ -10,7 +10,6 @@ interface MessageToolbarProps {
   handleEdit: () => void
   handleThread: () => void
   handleDelete: () => void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleReaction: (value: string) => void
   hideTreadButton?: boolean
 }
@@ -34,21 +33,21 @@ const MessageToolbar = ({
         </EmojiPopover>
         {!hideTreadButton && (
           <Hint label="Reply in thread">
-            <Button variant="ghost" size="iconSm" disabled={isPending}>
+            <Button variant="ghost" size="iconSm" disabled={isPending} onClick={handleThread}>
               <MessageSquareText className="size-4" />
             </Button>
           </Hint>
         )}
         {isAuthor && (
           <Hint label="Edit">
-            <Button variant="ghost" size="iconSm" disabled={isPending}>
+            <Button variant="ghost" size="iconSm" disabled={isPending} onClick={handleEdit}>
               <Pencil className="size-4" />
             </Button>
           </Hint>
         )}
         {isAuthor && (
           <Hint label="Delete">
-            <Button variant="ghost" size="iconSm" disabled={isPending}>
+            <Button variant="ghost" size="iconSm" disabled={isPending} onClick={handleDelete}>
               <Trash className="size-4" />
             </Button>
           </Hint>
