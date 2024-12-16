@@ -87,7 +87,7 @@ const MessageList = ({
                 image={message.image}
                 updatedAt={message.updatedAt}
                 createdAt={message._creationTime}
-                idEditing={editingId === message._id}
+                isEditing={editingId === message._id}
                 setIdEditing={setEditingId}
                 isCompact={isCompact}
                 hideTreadButton={variant === 'thread'}

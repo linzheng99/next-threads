@@ -8,10 +8,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 interface EmojiPopoverProps {
   children: React.ReactNode
   hint?: string
+  align?: 'start' | 'end' | 'center'
   onEmojiSelect: (emoji: string) => void
 }
 
-const EmojiPopover = ({ children, hint, onEmojiSelect }: EmojiPopoverProps) => {
+const EmojiPopover = ({ children, hint, align = 'center', onEmojiSelect }: EmojiPopoverProps) => {
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [tooltipOpen, setTooltipOpen] = useState(false)
 
@@ -41,7 +42,7 @@ const EmojiPopover = ({ children, hint, onEmojiSelect }: EmojiPopoverProps) => {
             <p className="font-medium text-xs">{hint}</p>
           </TooltipContent>
         </Tooltip>
-        <PopoverContent className="p-0 h-full border-none shadow-none">
+        <PopoverContent className="p-0 h-full border-none shadow-none" align={align}>
           <Picker
             onEmojiSelect={onSelect}
             data={data}

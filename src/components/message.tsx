@@ -6,6 +6,7 @@ import { type Doc, type Id } from "@/convex/_generated/dataModel";
 
 import Hint from "./hint";
 import MemberAvatar from "./member-avatar";
+import MessageToolbar from "./message-toolbar";
 import Thumbnail from "./thumbnail";
 
 
@@ -27,7 +28,7 @@ interface MessageProps {
   image: string | null | undefined
   createdAt: Doc<'messages'>['_creationTime']
   updatedAt: Doc<'messages'>['updatedAt']
-  idEditing: boolean
+  isEditing: boolean
   setIdEditing: (id: Id<'messages'> | null) => void
   isCompact?: boolean
   hideTreadButton?: boolean
@@ -51,7 +52,7 @@ const Message = ({
   image,
   createdAt,
   updatedAt,
-  idEditing,
+  isEditing,
   setIdEditing,
   isCompact = false,
   hideTreadButton = false,
@@ -74,6 +75,19 @@ const Message = ({
             {updatedAt ? (<span className="text-xs text-muted-foreground">(edited)</span>) : null}
           </div>
         </div>
+        {
+          !isEditing && (
+            <MessageToolbar
+              isAuthor={isAuthor}
+              isPending={false}
+              handleEdit={() => setIdEditing(id)}
+              handleThread={() => { }}
+              handleDelete={() => { }}
+              handleReaction={() => { }}
+              hideTreadButton={hideTreadButton}
+            />
+          )
+        }
       </div>
     );
   }
@@ -99,6 +113,19 @@ const Message = ({
           </div>
         </div>
       </div>
+      {
+        !isEditing && (
+          <MessageToolbar
+            isAuthor={isAuthor}
+            isPending={false}
+            handleEdit={() => setIdEditing(id)}
+            handleThread={() => { }}
+            handleDelete={() => { }}
+            handleReaction={() => { }}
+            hideTreadButton={hideTreadButton}
+          />
+        )
+      }
     </div>
   );
 }
