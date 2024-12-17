@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import Hint from "./hint";
 import MemberAvatar from "./member-avatar";
 import MessageToolbar from "./message-toolbar";
+import ThreadBar from "./thread-bar";
 import Thumbnail from "./thumbnail";
 
 
@@ -41,8 +42,9 @@ interface MessageProps {
   isCompact?: boolean
   hideTreadButton?: boolean
   threadCount?: number
-  threadImage?: string | null | undefined
+  threadImage?: string
   threadTimestamp?: number
+  threadName?: string
 }
 
 function formatFullTime(date: Date) {
@@ -67,8 +69,9 @@ const Message = ({
   threadCount,
   threadImage,
   threadTimestamp,
+  threadName,
 }: MessageProps) => {
-  const { parentMessageId, setParentMessageId, onClose: onClosePanel } = usePanel()
+  const { parentMessageId, setParentMessageId, onClose: onClosePanel, onOpenMessage } = usePanel()
 
   const [ConfirmDialog, confirm] = useConfirm(
     'Are you sure you want to delete this message?',
@@ -178,10 +181,10 @@ const Message = ({
     <>
       <ConfirmDialog />
       <div className={cn(
-          "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
-          isEditing && 'bg-[#f2c74433] hover:bg-[#f2c74433]',
-          isRemovingMessage && 'bg-rose-500/50 transform transition-all scale-y-0 duration-200'
-        )}>
+        "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
+        isEditing && 'bg-[#f2c74433] hover:bg-[#f2c74433]',
+        isRemovingMessage && 'bg-rose-500/50 transform transition-all scale-y-0 duration-200'
+      )}>
         <div className="flex items-start gap-2">
           <MemberAvatar name={authorName} image={authorImage} className="size-10" fallbackClassName="text-lg" />
           {
@@ -211,6 +214,13 @@ const Message = ({
                   <Thumbnail url={image} />
                   {updatedAt ? (<span className="text-xs text-muted-foreground">(edited)</span>) : null}
                   <Reactions data={reactions} onChange={handleToggleReaction} />
+                  <ThreadBar
+                    count={threadCount}
+                    image={threadImage}
+                    timestamp={threadTimestamp}
+                    name={threadName}
+                    onClick={() => onOpenMessage(id)}
+                  />
                 </div>
               </div>
             )

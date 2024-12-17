@@ -22,6 +22,7 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
       count: 0,
       image: undefined,
       timestamp: 0,
+      name: undefined,
     }
   }
 
@@ -33,7 +34,8 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
     return {
       count: messages.length,
       image: lastMessage.image,
-      timestamp: lastMessage.updatedAt,
+      timestamp: lastMessage._creationTime,
+      name: undefined,
     }
   }
 
@@ -43,7 +45,8 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
   return {
     count: messages.length, // 回复线程中的消息数量
     image: lastMessageUser?.image, // 回复线程的用户的头像
-    timestamp: lastMessageUser?._creationTime, // 回复线程中最后一条消息的时间
+    timestamp: lastMessage._creationTime, // 回复线程中最后一条消息的时间
+    name: lastMessageUser?.name, // 回复线程中最后一条消息的成员名称
   }
 }
 
@@ -166,6 +169,7 @@ export const get = query({
             threadCount: thread.count,
             threadImage: thread.image,
             threadTimestamp: thread.timestamp,
+            threadName: thread.name,
           }
         }))
       ).filter((message): message is NonNullable<typeof message> => message !== null)
