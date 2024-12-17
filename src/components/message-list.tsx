@@ -3,11 +3,12 @@ import { Loader } from "lucide-react";
 import { useState } from "react";
 
 import { type Id } from "@/convex/_generated/dataModel";
+import ChannelHero from "@/features/channels/components/channel-hero";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
+import MemberHero from "@/features/members/components/member-hero";
 import { type GetMessagesResultType } from "@/features/messages/api/use-get-messages"
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
-import ChannelHero from "./channel-hero";
 import Message from "./message"
 
 const TIME_THRESHOLD = 5;
@@ -134,6 +135,11 @@ const MessageList = ({
       {
         variant === 'channel' && channelCreationTime && channelName && (
           <ChannelHero name={channelName} creationTime={channelCreationTime} />
+        )
+      }
+      {
+        variant === 'conversation' && (
+          <MemberHero name={memberName} image={memberImage} />
         )
       }
     </div>

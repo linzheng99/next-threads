@@ -43,9 +43,6 @@ const ChannelIdPage = () => {
         isLoadingMore={status === 'LoadingMore'}
         canLoadMore={status === 'CanLoadMore'}
       />
-      {/* <div className="flex-1">
-        {JSON.stringify(results)}
-      </div> */}
       <ChannelInput placeholder={`Message # ${channel.name}`} />
     </div>
   )
