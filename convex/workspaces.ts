@@ -171,13 +171,32 @@ export const remove = mutation({
       throw new Error("Unauthorized")
     }
 
-    // 删除 workspace 中的所有成员; TODO: remove channels
-    const [members] = await Promise.all([
+    const [members, channels, conversations, messages, reactions] = await Promise.all([
       ctx.db.query('members').withIndex('by_workspace_id', (q) => q.eq('workspaceId', args.id)).collect(),
+      ctx.db.query('channels').withIndex('by_workspace_id', (q) => q.eq('workspaceId', args.id)).collect(),
+      ctx.db.query('conversations').filter((q) => q.eq(q.field("workspaceId"), args.id)).collect(),
+      ctx.db.query('messages').withIndex('by_workspace_id', (q) => q.eq('workspaceId', args.id)).collect(),
+      ctx.db.query('reactions').withIndex('by_workspace_id', (q) => q.eq('workspaceId', args.id)).collect(),
     ])
 
     for (const member of members) {
       await ctx.db.delete(member._id)
+    }
+
+    for (const channel of channels) {
+      await ctx.db.delete(channel._id)
+    }
+
+    for (const conversation of conversations) {
+      await ctx.db.delete(conversation._id)
+    }
+
+    for (const message of messages) {
+      await ctx.db.delete(message._id)
+    }
+
+    for (const reaction of reactions) {
+      await ctx.db.delete(reaction._id)
     }
 
     await ctx.db.delete(args.id)
