@@ -23,9 +23,8 @@ const MessageToolbar = ({
   handleReaction,
   hideTreadButton,
 }: MessageToolbarProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleEmojiSelect(emoji: any) {
-    handleReaction(emoji.native)
+  function handleEmojiSelect(emoji: string) {
+    handleReaction(emoji)
   }
 
   return (

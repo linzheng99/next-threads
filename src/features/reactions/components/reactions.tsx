@@ -26,9 +26,8 @@ const Reactions = ({ data, onChange }: ReactionsProps) => {
 
   if (data.length === 0 || !currentMemberId) return null
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleEmojiSelect(emoji: any) {
-    onChange(emoji.native)
+  function handleEmojiSelect(emoji: string) {
+    onChange(emoji)
   }
 
   return (
