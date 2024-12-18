@@ -55,7 +55,7 @@ export const getById = query({
       .unique()
 
     if (!member) {
-      throw new Error("Unauthorized")
+      return null
     }
 
     return channel

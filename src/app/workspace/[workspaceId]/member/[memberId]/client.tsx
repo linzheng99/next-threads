@@ -26,8 +26,6 @@ const MemberConversationClient = ({ id }: MemberConversationClientProps) => {
     return <PageError message="member not found" />
   }
 
-  console.log(member)
-
   return (
     <div className="h-full flex flex-col">
       <MemberHeader
