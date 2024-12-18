@@ -71,7 +71,7 @@ const Message = ({
   threadTimestamp,
   threadName,
 }: MessageProps) => {
-  const { parentMessageId, setParentMessageId, onClose: onClosePanel, onOpenMessage } = usePanel()
+  const { parentMessageId, onClose: onClosePanel, onOpenMessage, onOpenProfile } = usePanel()
 
   const [ConfirmDialog, confirm] = useConfirm(
     'Are you sure you want to delete this message?',
@@ -165,7 +165,7 @@ const Message = ({
                 isAuthor={isAuthor}
                 isPending={isPending}
                 handleEdit={() => setIdEditing(id)}
-                handleThread={() => setParentMessageId(id)}
+                handleThread={() => onOpenMessage(id)}
                 handleDelete={handleRemoveMessage}
                 handleReaction={handleToggleReaction}
                 hideTreadButton={hideTreadButton}
@@ -186,7 +186,9 @@ const Message = ({
         isRemovingMessage && 'bg-rose-500/50 transform transition-all scale-y-0 duration-200'
       )}>
         <div className="flex items-start gap-2">
-          <MemberAvatar name={authorName} image={authorImage} className="size-10" fallbackClassName="text-lg" />
+          <button onClick={() => onOpenProfile(memberId)}>
+            <MemberAvatar name={authorName} image={authorImage} className="size-10" fallbackClassName="text-lg" />
+          </button>
           {
             isEditing ? (
               <div className="w-full h-full">
@@ -201,7 +203,7 @@ const Message = ({
             ) : (
               <div className="flex flex-col w-full overflow-hidden">
                 <div className="text-sm">
-                  <button className="text-sm font-semibold hover:underline">{authorName}</button>
+                  <button className="text-sm font-semibold hover:underline" onClick={() => onOpenProfile(memberId)}>{authorName}</button>
                   <span>&nbsp;·&nbsp;</span>
                   <Hint label={formatFullTime(new Date(createdAt))}>
                     <button className="text-xs text-muted-foreground hover:underline">
@@ -232,7 +234,7 @@ const Message = ({
               isAuthor={isAuthor}
               isPending={isPending}
               handleEdit={() => setIdEditing(id)}
-              handleThread={() => setParentMessageId(id)}
+              handleThread={() => onOpenMessage(id)}
               handleDelete={handleRemoveMessage}
               handleReaction={handleToggleReaction}
               hideTreadButton={hideTreadButton}

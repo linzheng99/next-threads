@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/resizable"
 import WorkspaceSidebar from "@/components/workspace-sidebar";
 import { type Id } from "@/convex/_generated/dataModel";
+import Profile from "@/features/members/components/profile";
 import Thread from "@/features/messages/components/thread";
 import usePanel from "@/hooks/use-panel";
 
@@ -19,9 +20,9 @@ interface WorkspaceLayoutProps {
 }
 
 const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
-  const { parentMessageId, onClose } = usePanel()
+  const { parentMessageId, onClose, profileMemberId } = usePanel()
 
-  const showPanel = !!parentMessageId
+  const showPanel = !!parentMessageId || !!profileMemberId
 
   return (
     <div className="h-full">
@@ -44,6 +45,11 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
                   parentMessageId ? (
                     <Thread
                       messageId={parentMessageId as Id<'messages'>}
+                      onClose={onClose}
+                    />
+                  ) : profileMemberId ? (
+                    <Profile
+                      memberId={profileMemberId as Id<'members'>}
                       onClose={onClose}
                     />
                   ) : (
