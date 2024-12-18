@@ -7,6 +7,7 @@ import MemberHeader from "@/features/members/components/header";
 import MemberInput from "@/features/members/components/member-input";
 import { useGetMessages } from "@/features/messages/api/use-get-messages";
 import { useMemberId } from "@/hooks/use-member-id";
+import usePanel from "@/hooks/use-panel";
 
 interface MemberConversationClientProps {
   id: Id<"conversations">
@@ -14,6 +15,7 @@ interface MemberConversationClientProps {
 
 const MemberConversationClient = ({ id }: MemberConversationClientProps) => {
   const memberId = useMemberId()
+  const { onOpenProfile } = usePanel()
 
   const { data: member, isLoading: isMemberLoading } = useGetMember({ id: memberId })
   const { results, status, loadMore } = useGetMessages({ conversationId: id })
@@ -31,7 +33,7 @@ const MemberConversationClient = ({ id }: MemberConversationClientProps) => {
       <MemberHeader
         memberName={member?.user.name}
         memberImage={member?.user.image}
-        onClick={() => { }}
+        onClick={() => onOpenProfile(memberId)}
       />
       <MessageList
         variant="conversation"
